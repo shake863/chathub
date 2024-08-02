@@ -16,6 +16,13 @@ class GlobalFetchRequester implements Requester {
 class ProxyFetchRequester implements Requester {
   async findExistingProxyTab() {
     const tabs = await Browser.tabs.query({ pinned: true })
+    tabs.forEach((tab) => {
+      if (tab.url?.startsWith('https://chatgpt.com/')) {
+        return tab
+      }
+
+      console.log('tab.url id', tab.url, tab.id)
+    })
     const results: (string | undefined)[] = await Promise.all(
       tabs.map(async (tab) => {
         if (tab.url) {
@@ -25,7 +32,7 @@ class ProxyFetchRequester implements Requester {
       }),
     )
     for (let i = 0; i < results.length; i++) {
-      if (results[i]?.startsWith('https://chat.openai.com')) {
+      if (results[i]?.startsWith('https://chatgpt.com/')) {
         return tabs[i]
       }
     }

@@ -55,6 +55,7 @@ export async function proxyFetch(tabId: number, url: string, options?: RequestIn
         port.onMessage.addListener(function onMessage(
           message: ProxyFetchResponseMetadataMessage | ProxyFetchResponseBodyChunkMessage,
         ) {
+          console.debug('proxyFetch', 'onMessage', message)
           if (message.type === 'PROXY_RESPONSE_METADATA') {
             const response = new Response(body, message.metadata)
             resolve(response)
@@ -69,6 +70,7 @@ export async function proxyFetch(tabId: number, url: string, options?: RequestIn
             }
           }
         })
+        console.debug('postMessage', 'start', url, options)
         port.postMessage({ url, options } as ProxyFetchRequestMessage)
       },
       cancel(_reason: string) {
